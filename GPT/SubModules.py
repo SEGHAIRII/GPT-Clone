@@ -20,7 +20,7 @@ class LayerNorm(nn.Module):
 class GelU(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         return 0.5 * x * (1 + torch.tanh(torch.sqrt(2 / torch.pi) * (x + 0.044715 * x ** 3)))
     
     
