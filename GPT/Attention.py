@@ -26,21 +26,23 @@ class MultiHeadAttention(nn.Module):
         values = self.W_values(X)
         # Here we split the big matrix into num_heads matrices
         # and transpose the last two dimensions
-        keys = keys.view(b, num_tokens, self.num_heads, self.head_dim).transpose(1, 2)
-        queries = queries.view(b, num_tokens, self.num_heads, self.head_dim).transpose(1, 2)
-        values = values.view(b, num_tokens, self.num_heads, self.head_dim).transpose(1, 2)
+        keys = keys.view(b, num_tokens, self.num_heads, self.head_dim)
+        queries = queries.view(b, num_tokens, self.num_heads, self.head_dim)
+        values = values.view(b, num_tokens, self.num_heads, self.head_dim)
+        keys = keys.transpose(1,2)
+        queries = queries.transpose(1,2)
+        values = values.transpose(1,2)
         
         
-        scores = torch.matmul(queries, keys.transpose(2,3))
+        scores = queries @ keys.transpose(2,3)
+        mask_bool = self.mask.bool()[:num_tokens, :num_tokens]
         
-        scores.masked_fill_(self.mask.bool()[:num_tokens, :num_tokens], - torch.inf)
+        scores.masked_fill_(mask_bool, - torch.inf)
         attn_weights = torch.softmax(scores / keys.shape[-1] ** 0.5, dim=-1)
         attn_weights = self.dropout(attn_weights)
-        context_vec = torch.matmul(attn_weights, values).transpose(1,2)
+        context_vec = (attn_weights @ values).transpose(1,2)
         context_vec = context_vec.contiguous().view(b, num_tokens, self.d_out)
         context_vec = self.outproj(context_vec)
-        
-        
         return context_vec
     
     
