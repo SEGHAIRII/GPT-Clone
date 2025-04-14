@@ -23,7 +23,7 @@ class gptDataSet(Dataset):
     
     
     
-def get_dataloder(text:str, tokenizer:tiktoken.core.Encoding, context_size:int, stride:int, batch_size:int, shuffle:bool=True, num_workers:int=0):
+def get_dataloader(text:str, tokenizer:tiktoken.core.Encoding, context_size:int, stride:int, batch_size:int, shuffle:bool=True, num_workers:int=0):
     dataset = gptDataSet(text, tokenizer, context_size, stride)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
     return dataloader
