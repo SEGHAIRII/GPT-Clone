@@ -21,11 +21,8 @@ class transformer(nn.Module):
     def forward(self, x):
         shortcut = x
         x = self.norm1(x)
-        print(x)
         x = self.att(x)
-        print(x)
         x = self.dropout(x)
-        print(x)
         x = x + shortcut
         shortcut = x
         x = self.norm2(x)

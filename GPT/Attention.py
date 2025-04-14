@@ -34,11 +34,10 @@ class MultiHeadAttention(nn.Module):
         values = values.transpose(1,2)
         
         
-        scores = queries @ keys.transpose(2,3)
-        mask_bool = self.mask.bool()[:num_tokens, :num_tokens]
-        
-        scores.masked_fill_(mask_bool, - torch.inf)
-        attn_weights = torch.softmax(scores / keys.shape[-1] ** 0.5, dim=-1)
+        scores = (queries @ keys.transpose(2,3)) / self.head_dim ** 0.5
+        mask = torch.triu(torch.ones(num_tokens, num_tokens, device=X.device), diagonal=1).bool()
+        scores = scores.masked_fill(mask, float('-inf'))
+        attn_weights = torch.softmax(scores, dim=-1)
         attn_weights = self.dropout(attn_weights)
         context_vec = (attn_weights @ values).transpose(1,2)
         context_vec = context_vec.contiguous().view(b, num_tokens, self.d_out)

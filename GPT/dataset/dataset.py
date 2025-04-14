@@ -3,7 +3,7 @@ from torch.utils.data import Dataset, DataLoader
 import tiktoken
 
 class gptDataSet(Dataset):
-    def __init(self, text:str, tokenizer:tiktoken.core.Encoding, context_size: int, stride:int):
+    def __init__(self, text:str, tokenizer:tiktoken.core.Encoding, context_size: int, stride:int):
         self.tokenizer = tokenizer
         self.context_size = context_size
         self.stride = stride
@@ -23,8 +23,8 @@ class gptDataSet(Dataset):
     
     
     
-def get_dataloader(text:str, tokenizer:tiktoken.core.Encoding, context_size:int, stride:int, batch_size:int, shuffle:bool=True, num_workers:int=0):
-    dataset = gptDataSet(text, tokenizer, context_size, stride)
+def get_dataloader(text:str, tokenizer:tiktoken.core.Encoding, context_length:int, stride:int, batch_size:int, shuffle:bool=True, num_workers:int=0):
+    dataset = gptDataSet(text, tokenizer, context_length, stride)
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
     return dataloader
 
