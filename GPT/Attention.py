@@ -3,15 +3,15 @@ import torch
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_in:int, d_out:int, context_length:int, dropout:float=0.0, num_heads:int=1):
+    def __init__(self, d_in:int, d_out:int, context_length:int, dropout:float=0.0, num_heads:int=1, qkv_bias:bool):
         super().__init__()
         self.d_out = d_out
         self.num_heads = num_heads
         self.head_dim = d_out // num_heads
         # Here we used one big matrix to store all matrices
-        self.W_keys = nn.Linear(d_in, d_out, bias=False)
-        self.W_queries = nn.Linear(d_in, d_out, bias=False)
-        self.W_values = nn.Linear(d_in, d_out, bias=False)
+        self.W_keys = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_queries = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_values = nn.Linear(d_in, d_out, bias=qkv_bias)
         self.dropout = nn.Dropout(dropout)
         self.outproj = nn.Linear(d_out, d_out)
         self.register_buffer(

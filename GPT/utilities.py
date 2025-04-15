@@ -10,7 +10,7 @@ def generate(model, idx, max_new_tokens, context_size,
             logits = model(idx_cond)
         logits = logits[:, -1, :]
 
-         if top_k is not None:
+        if top_k is not None:
             top_logits, _ = torch.topk(logits, top_k)
             min_val = top_logits[:, -1]
             logits = torch.where(
