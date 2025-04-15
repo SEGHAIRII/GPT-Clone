@@ -9,9 +9,9 @@ class MultiHeadAttention(nn.Module):
         self.num_heads = num_heads
         self.head_dim = d_out // num_heads
         # Here we used one big matrix to store all matrices
-        self.W_keys = nn.Linear(d_in, d_out, bias=qkv_bias)
-        self.W_queries = nn.Linear(d_in, d_out, bias=qkv_bias)
-        self.W_values = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_key = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_query = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_value = nn.Linear(d_in, d_out, bias=qkv_bias)
         self.dropout = nn.Dropout(dropout)
         self.outproj = nn.Linear(d_out, d_out)
         self.register_buffer(
@@ -21,9 +21,9 @@ class MultiHeadAttention(nn.Module):
         
     def forward(self, X):
         b, num_tokens, d_in = X.size()
-        keys = self.W_keys(X)
-        queries = self.W_queries(X)
-        values = self.W_values(X)
+        keys = self.W_key(X)
+        queries = self.W_query(X)
+        values = self.W_value(X)
         # Here we split the big matrix into num_heads matrices
         # and transpose the last two dimensions
         keys = keys.view(b, num_tokens, self.num_heads, self.head_dim)
