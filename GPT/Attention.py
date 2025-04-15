@@ -3,7 +3,7 @@ import torch
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_in:int, d_out:int, context_length:int, dropout:float=0.0, num_heads:int=1, qkv_bias:bool):
+    def __init__(self, d_in:int, d_out:int, context_length:int, dropout:float=0.0, num_heads:int=1, qkv_bias:bool = False):
         super().__init__()
         self.d_out = d_out
         self.num_heads = num_heads
